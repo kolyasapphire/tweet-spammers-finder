@@ -28,6 +28,14 @@ const args = new URLSearchParams({
   exclude: 'replies,retweets',
 })
 
+let fetchedTimes = 0
+let data = []
+let earliestTweet = null
+let users = []
+
+// Just for stats
+let latestTweet = null
+
 const request = async (to) => {
   if (to) {
     args.until_id = to
@@ -38,6 +46,11 @@ const request = async (to) => {
     console.log(req.status, req.statusText)
     console.log(await req.text())
 
+    if (req.status === 429) {
+      console.log(`fetched ${fetchedTimes} times before failing`)
+      throw new Error('Limits hit')
+    }
+
     throw new Error('Failed to fetch')
   }
 
@@ -45,14 +58,6 @@ const request = async (to) => {
 
   return res
 }
-
-let fetchedTimes = 0
-let data = []
-let earliestTweet = null
-let users = []
-
-// Just for stats
-let latestTweet = null
 
 do {
   const response = await request(earliestTweet?.id)
