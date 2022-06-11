@@ -1,0 +1,103 @@
+import fetch from 'node-fetch'
+
+const USER_ID = 123
+const AUTH_TOKEN = 'xxx'
+const PAGES = 10
+
+// As we go backwards, we use earliest tweet id in next requests
+const getEarliestTweet = (input) =>
+  input.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))[0]
+const getLatestTweet = (input) =>
+  input.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0]
+
+// Playground
+// https://oauth-playground.glitch.me/?id=usersIdTimeline&params=%28%27tweet*created_at%2C-%2Cid%27%7Eexpansion6-%27%7Eid%21%2728003745%27%7Emax_result6100%27%7Euser*id%2Cname%2Cusername%27%29*.field6-author_id6s%21%27%016-*_
+const endpoint = `https://api.twitter.com/2/users/${USER_ID}/timelines/reverse_chronological`
+
+const options = {
+  headers: {
+    Authorization: `Bearer ${AUTH_TOKEN}`,
+  },
+}
+
+const args = new URLSearchParams({
+  'tweet.fields': 'created_at,author_id,id',
+  expansions: 'author_id',
+  max_results: 100,
+  'user.fields': 'id,name,username',
+  exclude: 'replies,retweets',
+})
+
+const request = async (to) => {
+  if (to) {
+    args.until_id = to
+  }
+  const req = await fetch(`${endpoint}?${args.toString()}`, options)
+
+  if (!req.ok) {
+    console.log(req.status, req.statusText)
+    console.log(await req.text())
+
+    throw new Error('Failed to fetch')
+  }
+
+  const res = await req.json()
+
+  return res
+}
+
+let fetchedTimes = 0
+let data = []
+let earliestTweet = null
+let users = []
+
+// Just for stats
+let latestTweet = null
+
+do {
+  const response = await request(earliestTweet?.id)
+  earliestTweet = getEarliestTweet(response.data)
+
+  data = [...data, ...response.data]
+  users = [...users, ...response.includes.users]
+
+  if (fetchedTimes === 0) {
+    latestTweet = getLatestTweet(response.data)
+  }
+
+  fetchedTimes = fetchedTimes += 1
+} while (fetchedTimes <= PAGES)
+
+const occurences = data.reduce((acc, item) => {
+  if (!acc.hasOwnProperty(item.author_id)) {
+    acc[item.author_id] = 1
+  }
+  acc[item.author_id] += 1
+  return acc
+}, {})
+
+let sortable = []
+for (var item in occurences) {
+  sortable.push([item, occurences[item]])
+}
+
+sortable.sort((a, b) => a[1] - b[1])
+
+const orgedUsers = users.reduce((acc, { id, name, username }) => {
+  if (!acc.hasOwnProperty(id)) {
+    acc[id] = { name, username }
+  }
+  return acc
+}, {})
+
+console.log(orgedUsers)
+
+sortable.forEach((x) =>
+  console.log(x[1], orgedUsers[x[0]].name, orgedUsers[x[0]].username)
+)
+
+console.log(
+  new Date(earliestTweet.created_at),
+  '->',
+  new Date(latestTweet.created_at)
+)
