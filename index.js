@@ -108,8 +108,6 @@ const orgedUsers = users.reduce((acc, { id, name, username }) => {
   return acc
 }, {})
 
-console.log(orgedUsers)
-
 sortable.forEach((x) =>
   console.log(x[1], orgedUsers[x[0]].name, orgedUsers[x[0]].username)
 )
