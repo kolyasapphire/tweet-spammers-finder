@@ -2,7 +2,7 @@ import fetch from 'node-fetch'
 
 const USER_ID = 123
 const AUTH_TOKEN = 'xxx'
-const PAGES = 10
+const PAGES = 180 - 10 // 180 limit
 
 // As we go backwards, we use earliest tweet id in next requests
 const getEarliestTweet = (input) =>
@@ -12,6 +12,7 @@ const getLatestTweet = (input) =>
 
 // Playground
 // https://oauth-playground.glitch.me/?id=usersIdTimeline&params=%28%27tweet*created_at%2C-%2Cid%27%7Eexpansion6-%27%7Eid%21%2728003745%27%7Emax_result6100%27%7Euser*id%2Cname%2Cusername%27%29*.field6-author_id6s%21%27%016-*_
+// Note: 180 requests in 15 minutes
 const endpoint = `https://api.twitter.com/2/users/${USER_ID}/timelines/reverse_chronological`
 
 const options = {
@@ -55,6 +56,18 @@ const request = async (to) => {
   }
 
   const res = await req.json()
+
+  const rateLimit = {
+    remaining: req.headers.get('x-rate-limit-remaining'),
+    limit: req.headers.get('x-rate-limit-limit'),
+    reset: req.headers.get('x-rate-limit-reset'),
+  }
+
+  console.log(
+    `${rateLimit.remaining}/${
+      rateLimit.limit
+    } reqs remaining resetting @ ${new Date(rateLimit.reset)}`
+  )
 
   return res
 }
