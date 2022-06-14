@@ -2,7 +2,7 @@ import fetch from 'node-fetch'
 
 const USER_ID = 123
 const AUTH_TOKEN = 'xxx'
-const MAX_PAGES = 2
+const MAX_PAGES = 30
 
 // Playground
 // https://oauth-playground.glitch.me/?id=usersIdTimeline&params=%28%27tweet*created_at%2C-%2Cid%27%7Eexpansion6-%27%7Eid%21%2728003745%27%7Emax_result6100%27%7Euser*id%2Cname%2Cusername%27%29*.field6-author_id6s%21%27%016-*_
