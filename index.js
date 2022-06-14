@@ -76,8 +76,6 @@ const request = async (to) => {
 do {
   const response = await request(earliestTweet?.id)
 
-  console.log(response.meta)
-
   if (response.meta.result_count === 0) {
     console.log('nothing more to fetch')
     break
