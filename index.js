@@ -86,18 +86,21 @@ do {
   fetchedTimes = fetchedTimes += 1
 } while (fetchedTimes <= PAGES)
 
-const occurences = data.reduce((acc, item) => {
-  if (!acc.hasOwnProperty(item.author_id)) {
-    acc[item.author_id] = 1
+console.log('loaded', data.length, 'tweets')
+
+const occurences = data.reduce((acc, { author_id }) => {
+  if (!acc.hasOwnProperty(author_id)) {
+    acc[author_id] = 0
   }
-  acc[item.author_id] += 1
+
+  acc[author_id] += 1
+
   return acc
 }, {})
 
-let sortable = []
-for (var item in occurences) {
-  sortable.push([item, occurences[item]])
-}
+console.log(Object.keys(occurences).length, 'unique tweeters')
+
+const sortable = Object.entries(occurences)
 
 sortable.sort((a, b) => a[1] - b[1])
 
