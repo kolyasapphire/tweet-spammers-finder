@@ -2,17 +2,12 @@ import fetch from 'node-fetch'
 
 const USER_ID = 123
 const AUTH_TOKEN = 'xxx'
-const PAGES = 180 - 10 // 180 limit
-
-// As we go backwards, we use earliest tweet id in next requests
-const getEarliestTweet = (input) =>
-  input.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))[0]
-const getLatestTweet = (input) =>
-  input.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0]
+const MAX_PAGES = 2
 
 // Playground
 // https://oauth-playground.glitch.me/?id=usersIdTimeline&params=%28%27tweet*created_at%2C-%2Cid%27%7Eexpansion6-%27%7Eid%21%2728003745%27%7Emax_result6100%27%7Euser*id%2Cname%2Cusername%27%29*.field6-author_id6s%21%27%016-*_
-// Note: 180 requests in 15 minutes
+// https://developer.twitter.com/en/docs/twitter-api/tweets/timelines/introduction
+// This endpoint has a per-user rate limit of 180 requests per 15-minute window and returns 800 of the most recent Tweets.
 const endpoint = `https://api.twitter.com/2/users/${USER_ID}/timelines/reverse_chronological`
 
 const options = {
@@ -39,8 +34,9 @@ let latestTweet = null
 
 const request = async (to) => {
   if (to) {
-    args.until_id = to
+    args.set('until_id', to)
   }
+
   const req = await fetch(`${endpoint}?${args.toString()}`, options)
 
   if (!req.ok) {
@@ -79,17 +75,25 @@ const request = async (to) => {
 
 do {
   const response = await request(earliestTweet?.id)
-  earliestTweet = getEarliestTweet(response.data)
+
+  console.log(response.meta)
+
+  if (response.meta.result_count === 0) {
+    console.log('nothing more to fetch')
+    break
+  }
+
+  earliestTweet = response.data.find((x) => x.id === response.meta.oldest_id)
 
   data = [...data, ...response.data]
   users = [...users, ...response.includes.users]
 
   if (fetchedTimes === 0) {
-    latestTweet = getLatestTweet(response.data)
+    latestTweet = response.data.find((x) => x.id === response.meta.newest_id)
   }
 
   fetchedTimes = fetchedTimes += 1
-} while (fetchedTimes <= PAGES)
+} while (fetchedTimes < MAX_PAGES)
 
 console.log('loaded', data.length, 'tweets')
 
@@ -121,6 +125,12 @@ sortable.forEach((x) =>
 )
 
 console.log(
+  '~',
+  Math.round(
+    (new Date(latestTweet.created_at) - new Date(earliestTweet.created_at)) /
+      36e5
+  ),
+  'hours of tweets:',
   new Date(earliestTweet.created_at),
   '->',
   new Date(latestTweet.created_at)
