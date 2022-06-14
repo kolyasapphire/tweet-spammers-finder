@@ -49,6 +49,11 @@ const request = async (to) => {
 
     if (req.status === 429) {
       console.log(`fetched ${fetchedTimes} times before failing`)
+
+      console.log(
+        `resetting @ ${new Date(req.headers.get('x-rate-limit-reset') * 1000)}`
+      )
+
       throw new Error('Limits hit')
     }
 
