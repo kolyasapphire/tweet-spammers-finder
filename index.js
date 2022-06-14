@@ -66,7 +66,7 @@ const request = async (to) => {
   console.log(
     `${rateLimit.remaining}/${
       rateLimit.limit
-    } reqs remaining resetting @ ${new Date(rateLimit.reset)}`
+    } reqs remaining resetting @ ${new Date(rateLimit.reset * 1000)}`
   )
 
   return res
