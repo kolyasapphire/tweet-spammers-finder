@@ -21,7 +21,8 @@ const args = new URLSearchParams({
   expansions: 'author_id',
   max_results: 100,
   'user.fields': 'id,name,username',
-  exclude: 'replies,retweets',
+  // if we exclude replies we won't count tweets in threads
+  exclude: 'retweets',
 })
 
 let fetchedTimes = 0
