@@ -1,7 +1,7 @@
+import 'dotenv/config'
 import fetch from 'node-fetch'
 
-const USER_ID = 123
-const AUTH_TOKEN = 'xxx'
+const { USER_ID, AUTH_TOKEN } = process.env
 const MAX_PAGES = 30
 
 // Playground
