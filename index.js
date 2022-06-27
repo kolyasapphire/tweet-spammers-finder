@@ -119,9 +119,11 @@ const orgedUsers = users.reduce((acc, { id, name, username }) => {
   return acc
 }, {})
 
-sortable.forEach((x) =>
-  console.log(x[1], orgedUsers[x[0]].name, orgedUsers[x[0]].username)
-)
+sortable.forEach((x) => {
+  if (x[1] >= 3) {
+    console.log(x[1], orgedUsers[x[0]].name, orgedUsers[x[0]].username)
+  }
+})
 
 console.log(
   '~',
