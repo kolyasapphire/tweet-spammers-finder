@@ -44,6 +44,14 @@ const request = async (to) => {
     console.log(req.status, req.statusText)
     console.log(await req.text())
 
+    if (req.status === 401) {
+      console.log(
+        'Go get a new token:',
+        'https://oauth-playground.glitch.me/?id=usersIdTimeline&params=%28%27id%21%2728003745%27%29_'
+      )
+      throw new Error('Bad token')
+    }
+
     if (req.status === 429) {
       console.log(`fetched ${fetchedTimes} times before failing`)
 
