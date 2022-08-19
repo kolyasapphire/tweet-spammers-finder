@@ -6,9 +6,9 @@
     "start": "next start"
   },
   "dependencies": {
-    "@chakra-ui/icons": "2.0.6",
-    "@chakra-ui/react": "2.2.6",
-    "@chakra-ui/theme-tools": "2.0.7",
+    "@chakra-ui/icons": "2.0.8",
+    "@chakra-ui/react": "2.2.8",
+    "@chakra-ui/theme-tools": "2.0.9",
     "@emotion/react": "11.10.0",
     "@emotion/styled": "11.10.0",
     "@tanstack/react-query": "4.0.10",
