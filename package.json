@@ -11,7 +11,7 @@
     "@chakra-ui/theme-tools": "2.0.13",
     "@emotion/react": "11.10.5",
     "@emotion/styled": "11.10.5",
-    "@tanstack/react-query": "4.16.1",
+    "@tanstack/react-query": "4.18.0",
     "framer-motion": "7.6.15",
     "next": "13.0.5",
     "react": "18.2.0",
