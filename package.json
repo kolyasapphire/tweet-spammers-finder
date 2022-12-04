@@ -4,7 +4,15 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "dotenv": "16.0.3"
+    "dotenv": "16.0.3",
+    "ts-node": "10.9.1"
   },
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "start": "ts-node index.ts"
+  },
+  "devDependencies": {
+    "@types/node": "18.11.10",
+    "typescript": "4.9.3"
+  }
 }
