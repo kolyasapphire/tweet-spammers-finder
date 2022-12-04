@@ -1,5 +1,4 @@
 import 'dotenv/config'
-import fetch from 'node-fetch'
 
 const { USER_ID, AUTH_TOKEN } = process.env
 const MAX_PAGES = 30
