@@ -56,7 +56,7 @@ const request = async (to: string) => {
     if (req.status === 401) {
       console.error(
         'Token is invalid, go get a new one:',
-        'https://oauth-playground.glitch.me/?id=usersIdTimeline&params=%28%27id%21%2728003745%27%29_'
+        'https://oauth-playground.glitch.me/?id=usersIdTimeline'
       )
       process.exit()
     }
