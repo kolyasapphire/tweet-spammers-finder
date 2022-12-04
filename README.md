@@ -1,3 +1,5 @@
+<img src="https://user-images.githubusercontent.com/4752441/205509302-433e8512-8e69-492a-be2b-ea622cd46186.png" width=50% height=50%>
+
 # Tweet Spammers Finder
 
 Small script which loads all tweets up to limits and finds out who tweeted the most in your feed.
